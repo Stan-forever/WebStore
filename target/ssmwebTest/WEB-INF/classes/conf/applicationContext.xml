@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--spring配置文件： 声明service，dao，工具类等对象-->
+
+    <context:property-placeholder location="classpath:conf/jdbc.properties" />
+
+    <!--声明数据源，连接数据库  使用阿里巴巴的数据连接驱动-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+<!--        数据驱动-->
+        <property name="driverClassName" value="${jdbc.driver}"/>
+<!--数据库的连接-->
+        <property name="url" value="${jdbc.url}" />
+<!--        数据库的登录名字-->
+        <property name="username" value="${jdbc.username}" />
+<!--        数据的登录密码-->
+        <property name="password" value="${jdbc.passwd}" />
+    </bean>
+
+    <!--SqlSessionFactoryBean创建SqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation"  value="classpath:conf/mybatis.xml" />
+    </bean>
+
+    <!--声明mybatis的扫描器，创建   dao本项目中的叫Mapper对象-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+<!--        需要注意的是 这个value值 与自己项目的持久层名字一样-->
+        <property name="basePackage" value="Mapper" />
+    </bean>
+
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--上传文件的最大大小，单位为字节 -->
+        <property name="maxUploadSize" value="17367648787"></property>
+
+        <!-- 上传文件的编码 -->
+        <property name="defaultEncoding" value="UTF-8"></property>
+    </bean>
+
+
+    <!--声明service的注解@Service所在的包名位置-->
+    <context:component-scan base-package="service" />
+
+</beans>

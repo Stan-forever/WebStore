@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Mapper.UserMapper">
+<!--    <select id="TotalUser" resultType="POJO.PagesInfor">-->
+<!--        SELECT COUNT(ID) AS total-->
+<!--        FROM  `user`-->
+<!--    </select>-->
+<!--    <select id="GetUserPagesList" parameterType="POJO.PagesInfor" resultType="POJO.User">-->
+<!--        select id, name, sex, password, age, tel, addr-->
+<!--        from user-->
+<!--        where isdelete = 0 LIMIT #{pagebegin}-->
+<!--            ,  #{pageend}-->
+<!--    </select>-->
+    <select id="getUserlist" resultType="POJO.User">
+        select * from smbms_user
+    </select>
+    <insert id="InsertUser" parameterType="POJO.User" useGeneratedKeys="true" keyProperty="id">
+    INSERT into smbms_user (id,userCode,userName,userPassword,sex,phone,address)
+    value ( #{id},#{userCode},#{userName},#{userPassword},#{sex},#{phone},#{address})
+    </insert>
+<!--    <update id="UpdateUser" parameterType="POJO.User" useGeneratedKeys="true" keyProperty="id">-->
+<!--        update User SET name=#{Name} where id=#{Id}-->
+<!--    </update>-->
+<!--    <delete id="DeleteUser" parameterType="POJO.User">-->
+<!--        delete from user where id=#{id}-->
+<!--    </delete>-->
+    <select id="CheckUser" parameterType="POJO.User" resultType="POJO.User">
+        select id,
+               userCode,userName,userPassword,sex,phone,address
+        from smbms_user
+        where userName=#{userName}
+    </select>
+<!--    <insert id="InsertList" useGeneratedKeys="true" keyProperty="id">-->
+<!--        INSERT into User (id, name, sex, password, age, tel, addr) value-->
+<!--        <foreach item="item" collection="list" separator=",">-->
+<!--            (#{item.id}, #{item.name}, #{sex}, #{password}, #{item.age}, #{item.tel}, #{item.addr})-->
+<!--        </foreach>-->
+<!--    </insert>-->
+    <select id="UserLogin" parameterType="POJO.User" resultType="POJO.User">
+        select *
+        from smbms_user
+        where userCode = #{userCode} and userPassword=#{userPassword}
+          and id > 0
+    </select>
+<!--    &lt;!&ndash;    用户分页检索&ndash;&gt;-->
+<!--    <select id="SerchUserPagesList" parameterType="POJO.SrechModel" resultType="POJO.User">-->
+<!--        select id,-->
+<!--               name,-->
+<!--               sex,-->
+<!--               password,-->
+<!--               age,-->
+<!--               tel,-->
+<!--               addr-->
+<!--        from user-->
+<!--        where isdelete = 0-->
+<!--        <if test="SrechaStr!=null"> and name = #{SrechaStr}</if>-->
+<!--          LIMIT #{Pagesindex}, #{pagesize}-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;    用户检索总数计算总数&ndash;&gt;-->
+<!--    <select id="SrechTotleUser" parameterType="POJO.SrechModel"  resultType="POJO.PagesInfor">-->
+<!--        SELECT COUNT(ID) AS totle-->
+<!--        FROM `user` where  isdelete = 0-->
+<!--        <if test="SrechaStr!=null"> and name = #{SrechaStr}</if>-->
+<!--    </select>-->
+<!--    &lt;!&ndash;    插入数据&ndash;&gt;-->
+<!--    <insert id="InsertUser" parameterType="POJO.User" useGeneratedKeys="true" keyProperty="id">-->
+<!--        INSERT into User (id,name, sex,age, password, tel,addr,isdelete) value (#{id},#{name},#{sex},#{age},#{password},#{tel},#{addr},0)-->
+<!--    </insert>-->
+
+    <!--修改用户信息-->
+    <update id="UpdateUser" parameterType="POJO.User" useGeneratedKeys="true" keyProperty="id">
+        update smbms_user
+        SET addr=#{addr}
+        where id=#{id}
+    </update>
+
+<!--    &lt;!&ndash;    获取用户信息明细&ndash;&gt;-->
+    <select id="getUser" parameterType="POJO.User"  resultType="POJO.User">
+        select *
+        from smbms_user where id=#{id}  and isdelete = 0
+    </select>
+
+    <update id="deleteUser" parameterType="POJO.User" useGeneratedKeys="true" keyProperty="id">
+        update smbms_user
+        SET isdelete=1
+        where id = #{id}
+    </update>
+
+</mapper>
